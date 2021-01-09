@@ -1,13 +1,14 @@
 import React from "react";
-import "./List.scss"
+import "./List.scss";
+import classNames from "classnames";
 
-export const List = ({ items }) => {
+export const List = ({ items, isRemovable, className }) => {
   return (
-    <ul class="list">
+    <ul className="list">
       {
-        items.map(i => (
-          <li className={i.active && 'active'}>
-            <i>{i.icon ? i.icon: <i className={`badge badge--${i.color}`}></i>}</i>
+        items.map((i, index) => (
+          <li key={index} className={classNames(i.className,{'active' : i.active})}>
+            <i>{i.icon ? i.icon : <i className={`badge badge--${i.color}`}></i>}</i>
             <span>{i.name}</span>
           </li>
         ))
