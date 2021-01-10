@@ -27,3 +27,33 @@
     padding: 60px 20px;
   }
 }
+
+.field {
+  background: #ffffff;
+  border: 1px solid #efefef;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 12px;
+  width: 100%;
+
+  &:focus {
+    border-color: rgb(26, 3, 3);
+  }
+}
+
+.button{
+
+background: #4DD599;
+border-radius: 4px;
+color: white;
+border: 0;
+padding: 10px 20px;
+cursor: pointer;
+
+&:hover{
+  background-color: darken( #4dd599, 5%);
+}
+&:active{
+  background-color: darken( #4dd599, 10%);
+}
+}

@@ -1,21 +1,21 @@
 import React from "react";
-import "./List.scss";
 import classNames from "classnames";
+import { Badge } from "../Badge/Badge";
 
-export const List = ({ items, isRemovable, className }) => {
+import "./List.scss";
+
+
+export const List = ({ items, isRemovable, className, onClick }) => {
   return (
-    <ul className="list">
+    <ul onClick={onClick} className="list">
       {
         items.map((i, index) => (
           <li key={index} className={classNames(i.className,{'active' : i.active})}>
-            <i>{i.icon ? i.icon : <i className={`badge badge--${i.color}`}></i>}</i>
+            <i>{i.icon ? i.icon : <Badge color={i.color}/>}</i>
             <span>{i.name}</span>
           </li>
         ))
       }
-      <li>
-        <span></span>
-      </li>
     </ul>
 
   )
