@@ -11,7 +11,9 @@ export const Tasks = ({ list, }) => {
                 {list.name}
                 <img src={editSvg} alt="edit" />
             </h2>
+
             <div className="tasks__items">
+                {!list.tasks.length && <h2>Задачи отсутствуют</h2>}
                 {
                     list.tasks.map(task =>
                     (

@@ -7,7 +7,7 @@ import axios from 'axios'
 import "./List.scss";
 
 
-export const List = ({ items, isRemovable, onClick, onRemove }) => {
+export const List = ({ items, isRemovable, onClick, onRemove, onClickItem, activeItem, }) => {
 
   const removeList = (i) => {
     if (window.confirm("удалить?")) {
@@ -23,9 +23,11 @@ export const List = ({ items, isRemovable, onClick, onRemove }) => {
     <ul onClick={onClick} className="list">
       {
         items.map((i, index) => (
-          <li key={index} className={classNames(i.className, { 'active': i.active })}>
+          <li key={index} className={classNames(i.className, { active: activeItem && activeItem.id === i.id })}
+            onClick={onClickItem ? () => onClickItem(i) : null}
+          >
             <i>{i.icon ? i.icon : <Badge color={i.color.name} />}</i>
-            <span>{i.name}</span>
+            <span>{i.name}{i.tasks && ` (${i.tasks.length})`}</span>
 
             { isRemovable &&
               <img className='list__remove-icon' src={removeSvg} alt="remove" onClick={() => removeList(i)} />}
