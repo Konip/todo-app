@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Badge } from '../Badge/Badge';
 import { List } from '../List/List';
 import closeSvg from '../../assets/img/close.svg'
+import axios from 'axios'
 
 import "./AddButtonList.scss";
+
 
 
 export const AddList = ({ colors, oneAddList }) => {
 
     const [visiblePopup, setVisiblePopup] = useState(false)
-    const [selectedColor, selectColor] = useState(colors[0].id)
+    const [selectedColor, selectColor] = useState(3)
     const [inputValue, setInputValue] = useState('')
+
+    useEffect(() => {
+        if (Array.isArray(colors)) {
+            selectColor(colors[0].id)
+        }
+    }, [])
 
     const onClose = () => {
         setVisiblePopup(false)
@@ -24,8 +32,11 @@ export const AddList = ({ colors, oneAddList }) => {
             alert('Браток давай текст')
             return
         }
-        const color = colors.filter(c => c.id === selectedColor)[0].name
-        oneAddList({ id: Math.random(), name: inputValue, color: color })
+        // const color = colors.filter(c => c.id === selectedColor)[0].name
+        axios.post('http://localhost:3001/lists', { name: inputValue, colorId: selectedColor }).then(({ data }) => {
+            console.log(data)
+        })
+        // oneAddList()
         onClose()
     }
 

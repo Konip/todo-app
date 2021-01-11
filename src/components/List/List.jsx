@@ -19,7 +19,7 @@ export const List = ({ items, isRemovable, onClick, onRemove }) => {
       {
         items.map((i, index) => (
           <li key={index} className={classNames(i.className, { 'active': i.active })}>
-            <i>{i.icon ? i.icon : <Badge color={i.color} />}</i>
+            <i>{i.icon ? i.icon : <Badge color={i.color.name} />}</i>
             <span>{i.name}</span>
 
             { isRemovable &&
