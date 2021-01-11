@@ -1,4 +1,4 @@
-{ 
+{
   "lists": [
     {
       "id": 1,
@@ -120,12 +120,6 @@
       "text": "Сделали удаление и редактирование задач и списков",
       "completed": true,
       "id": 17
-    },
-    {
-      "listId": 8,
-      "text": "tttt",
-      "completed": false,
-      "id": 18
     }
   ],
   "colors": [

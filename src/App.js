@@ -6,21 +6,16 @@ import { Tasks } from './components/Tasks/Tasks';
 import axios from 'axios'
 
 
-// DB.lists.map(l => {
-//     l.color = DB.colors.filter(c => c.id === l.colorId)[0].name
-//     return l
-// })
 function App() {
 
     const [lists, setLists] = useState(null)
     const [colors, setColors] = useState(null)
 
     useEffect(() => {
-        axios.get('http://localhost:3001/lists?_expand=color').then(({ data }) => {
+        axios.get('http://localhost:3001/lists?_expand=color&_embed=tasks').then(({ data }) => {
             setLists(data)
-            console.log(data)
         })
-        
+
         axios.get('http://localhost:3001/colors').then(({ data }) => {
             setColors(data)
         })
@@ -31,9 +26,7 @@ function App() {
         const newList = [...lists, obj]
         setLists(newList)
     }
-    const onRemove = (i) => {
-        console.log(i)
-    }
+
 
     return <div className="todo" >
         <div className="todo__sidebar">
@@ -54,11 +47,19 @@ function App() {
                     active: true
                 }
             ]} />
-            {/* <List items={lists} isRemovable={true} onRemove={onRemove} /> */}
+            {lists ? <List items={lists} isRemovable={true}
+
+                onRemove={id => {
+                    const newLists = lists.filter(list => list.id !== id)
+                    setLists(newLists)
+                }}
+
+            /> : 'Загрузк...'}
+
             <AddList oneAddList={oneAddList} colors={colors} />
         </div>
         <div className="todo__tasks">
-            <Tasks />
+            {lists && <Tasks list={lists[1]} />}
         </div>
     </div>
 
