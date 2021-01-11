@@ -18,6 +18,7 @@
   box-shadow: 1px 2px 20px #eceaea;
   border-radius: 10px;
   font-size: 14px;
+  display: flex;
 
   &__sidebar {
     background-color: #f4f6f8;
@@ -26,7 +27,14 @@
     border-right: 1px solid #f1f1f1;
     padding: 60px 20px;
   }
+
+  &__tasks{
+    flex:1;
+    padding: 60px;
+  }
 }
+
+
 
 .field {
   background: #ffffff;
