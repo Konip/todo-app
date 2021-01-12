@@ -4,6 +4,8 @@ import { AddList } from "./components/AddList/AddButtonList";
 import { List } from "./components/List/List";
 import { Tasks } from './components/Tasks/Tasks';
 import axios from 'axios'
+import { Route, useHistory } from 'react-router-dom';
+
 
 
 function App() {
@@ -11,6 +13,7 @@ function App() {
     const [lists, setLists] = useState(null)
     const [colors, setColors] = useState(null)
     const [activeItem, setactiveItem] = useState(null)
+    let history = useHistory();
 
     useEffect(() => {
         axios.get('http://localhost:3001/lists?_expand=color&_embed=tasks').then(({ data }) => {
@@ -71,20 +74,38 @@ function App() {
                 ]} />
 
                 {/* список задач */}
-                {lists ? <List items={lists} isRemovable={true} onClickItem={i => setactiveItem(i)}
-                    activeItem={activeItem}
-                    onRemove={id => {
-                        const newLists = lists.filter(list => list.id !== id)
-                        setLists(newLists)
-                    }}
-                /> : 'Загрузк...'}
+                {lists ?
+                    <List items={lists} isRemovable={true}
+                        onClickItem={item => {
+                            history.push(`/lists/${item.id}`)
+                        }}
+                        activeItem={activeItem}
+                        onRemove={id => {
+                            const newLists = lists.filter(list => list.id !== id)
+                            setLists(newLists)
+                        }}
+                    /> : 'Загрузк...'
+                }
 
                 {/* добавить задачу */}
                 <AddList oneAddList={oneAddList} colors={colors} />
             </div>
+
             <div className="todo__tasks">
-                {lists && activeItem &&
-                    <Tasks list={activeItem} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask} />}
+                <Route exact path='/'>
+                    {lists &&
+                        lists.map(list => (
+                            <Tasks key={list.id} list={list} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask}
+                                withoutEmpty
+                            />
+                        ))
+                    }
+                </Route>
+
+                <Route path='/lists/:id'>
+                    {lists && activeItem &&
+                        <Tasks list={activeItem} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask} />}
+                </Route>
             </div>
         </div>
     )

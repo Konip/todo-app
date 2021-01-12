@@ -5,7 +5,7 @@ import axios from 'axios'
 import { AddTasksForm } from './AddTasksForm'
 
 
-export const Tasks = ({ list, onEditTitle, oneAddTask }) => {
+export const Tasks = ({ list, onEditTitle, oneAddTask, withoutEmpty }) => {
 
     const editTitle = () => {
         const netTitle = window.prompt('Название списка', list.name)
@@ -22,13 +22,13 @@ export const Tasks = ({ list, onEditTitle, oneAddTask }) => {
     return (
         <div className="tasks">
 
-            <h2 onClick={editTitle} className="tasks__title">
+            <h2 style={{ color: list.color.hex }} onClick={editTitle} className="tasks__title">
                 {list.name}
                 <img src={editSvg} alt="edit" />
             </h2>
 
             <div className="tasks__items">
-                {!list.tasks.length && <h2>Задачи отсутствуют</h2>}
+                {!withoutEmpty && !list.tasks.length && <h2>Задачи отсутствуют</h2>}
                 {
                     list.tasks.map(task =>
                     (
