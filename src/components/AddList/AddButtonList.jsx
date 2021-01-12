@@ -83,6 +83,7 @@ export const AddList = ({ colors, oneAddList }) => {
                     <button className='button' onClick={addList}>
                         {isLoading ? 'Добавление...' : 'Добавить'}
                     </button>
+                    
                 </div>}
         </div>
 

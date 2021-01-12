@@ -28,13 +28,11 @@
     padding: 60px 20px;
   }
 
-  &__tasks{
-    flex:1;
+  &__tasks {
+    flex: 1;
     padding: 60px;
   }
 }
-
-
 
 .field {
   background: #ffffff;
@@ -49,19 +47,34 @@
   }
 }
 
-.button{
+.button {
+  background: #4dd599;
+  border-radius: 4px;
+  color: white;
+  border: 0;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
 
-background: #4DD599;
-border-radius: 4px;
-color: white;
-border: 0;
-padding: 10px 20px;
-cursor: pointer;
+  
+  &:hover {
+    background-color: darken(#4dd599, 5%);
+  }
 
-&:hover{
-  background-color: darken( #4dd599, 5%);
-}
-&:active{
-  background-color: darken( #4dd599, 10%);
-}
+  &:active {
+    background-color: darken(#4dd599, 10%);
+  }
+
+  &--grey {
+    background: #f4f6f8;
+    color: #444444;
+
+    &:hover {
+      background: darken($color: #f4f6f8, $amount: 3%);
+    }
+
+    &:active {
+      background: darken($color: #f4f6f8, $amount: 6%);
+    }
+  }
 }

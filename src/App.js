@@ -22,9 +22,18 @@ function App() {
         })
     }, [])
 
-
     const oneAddList = (obj) => {
         const newList = [...lists, obj]
+        setLists(newList)
+    }
+
+    const oneEditListTitle = (id, title) => {
+        const newList = lists.map(i => {
+            if (i.id === id) {
+                i.name = title
+            }
+            return i
+        })
         setLists(newList)
     }
 
@@ -63,7 +72,8 @@ function App() {
                 <AddList oneAddList={oneAddList} colors={colors} />
             </div>
             <div className="todo__tasks">
-                {lists && activeItem && <Tasks list={activeItem} />}
+                {lists && activeItem &&
+                    <Tasks list={activeItem} onEditTitle={oneEditListTitle} />}
             </div>
         </div>
     )
