@@ -5,7 +5,7 @@ import axios from 'axios'
 import { AddTasksForm } from './AddTasksForm'
 
 
-export const Tasks = ({ list, onEditTitle }) => {
+export const Tasks = ({ list, onEditTitle, oneAddTask }) => {
 
     const editTitle = () => {
         const netTitle = window.prompt('Название списка', list.name)
@@ -45,7 +45,7 @@ export const Tasks = ({ list, onEditTitle }) => {
                         </div>
                     ))
                 }
-                <AddTasksForm />
+                <AddTasksForm list={list} oneAddTask={oneAddTask} />
             </div>
         </div>
     )

@@ -23,7 +23,13 @@ export const List = ({ items, isRemovable, onClick, onRemove, onClickItem, activ
     <ul onClick={onClick} className="list">
       {
         items.map((i, index) => (
-          <li key={index} className={classNames(i.className, { active: activeItem && activeItem.id === i.id })}
+          <li key={index} className={classNames(i.className,
+            {
+              active: i.active
+                ? i.active
+                : activeItem && activeItem.id === i.id
+            })}
+
             onClick={onClickItem ? () => onClickItem(i) : null}
           >
             <i>{i.icon ? i.icon : <Badge color={i.color.name} />}</i>
