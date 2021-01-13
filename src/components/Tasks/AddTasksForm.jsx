@@ -36,9 +36,8 @@ export function AddTasksForm({ list, oneAddTask }) {
             .finally(() => {
                 setIsLoading(false)
             })
-
-
     }
+
     return (
 
         <div className="tasks__form">
@@ -54,14 +53,11 @@ export function AddTasksForm({ list, oneAddTask }) {
                         onChange={e => setInputValue(e.target.value)} />
 
                     <button disabled={isLoading} onClick={addTask} className='button'>
-                        {isLoading ? 'Добавление...':'Добавить задачу'}
+                        {isLoading ? 'Добавление...' : 'Добавить задачу'}
                     </button>
                     <button onClick={toogleFormVisible} className='button button--grey'> Отмена</button>
                 </div>
             }
-
-
-
         </div>
     )
 }

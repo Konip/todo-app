@@ -1,13 +1,14 @@
 import React from 'react'
 import "./Tasks.scss"
 import editSvg from '../../assets/img/edit.svg'
+import removeSvg from '../../assets/img/remove.svg'
 import axios from 'axios'
 import { AddTasksForm } from './AddTasksForm'
 import { Task } from './Task'
 import { Link } from 'react-router-dom';
 
 
-export const Tasks = ({ list, onEditTitle, oneAddTask, withoutEmpty, onRemoveTask, onEditTask, onCompleteTask }) => {
+export const Tasks = ({ list, onEditTitle, oneAddTask, withoutEmpty, onRemoveTask, onEditTask, onCompleteTask, onRemove }) => {
 
     const editTitle = () => {
         const netTitle = window.prompt('Название списка', list.name)
@@ -21,6 +22,14 @@ export const Tasks = ({ list, onEditTitle, oneAddTask, withoutEmpty, onRemoveTas
         }
     }
 
+    const removeTitle = () => {
+        if (window.confirm('Удалить?')) {
+            axios.delete('http://localhost:3001/lists/' + list.id).then(() => {
+                onRemove(list.id)
+            })
+        }
+    }
+
     return (
         <div className="tasks">
 
@@ -28,6 +37,7 @@ export const Tasks = ({ list, onEditTitle, oneAddTask, withoutEmpty, onRemoveTas
                 <h2 style={{ color: list.color.hex }} className="tasks__title">
                     {list.name}
                     <img src={editSvg} alt="edit" onClick={editTitle} />
+                    <img src={removeSvg} alt="remove" onClick={removeTitle} />
                 </h2>
             </Link>
 

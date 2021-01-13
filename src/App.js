@@ -11,7 +11,7 @@ function App() {
 
     const [lists, setLists] = useState(null)
     const [colors, setColors] = useState(null)
-    const [activeItem, setactiveItem] = useState(null)
+    const [activeItem, setActiveItem] = useState(null)
     let history = useHistory();
 
     useEffect(() => {
@@ -36,7 +36,6 @@ function App() {
             return i
         })
         setLists(newList)
-
     }
     const oneEditListTitle = (id, title) => {
         const newList = lists.map(i => {
@@ -104,6 +103,10 @@ function App() {
                 alert('Не удалось изменить задачу')
             })
     }
+    const onRemove = (id) => {
+        const newLists = lists.filter(list => list.id !== id)
+        setLists(newLists)
+    }
 
     return (
         <div className="todo" >
@@ -135,15 +138,16 @@ function App() {
                 {lists ?
                     <List items={lists} isRemovable onClickItem={i => {
                         history.push(`/lists/${i.id}`)
-                        setactiveItem(i)
-                       
+                        setActiveItem(i)
+
                     }}
 
                         activeItem={activeItem}
-                        onRemove={id => {
-                            const newLists = lists.filter(list => list.id !== id)
-                            setLists(newLists)
-                        }}
+                        onRemove={onRemove}
+                    // onRemove={id => {
+                    //     const newLists = lists.filter(list => list.id !== id)
+                    //     setLists(newLists)
+                    // }}
                     /> : 'Загрузк...'
                 }
 
@@ -156,7 +160,8 @@ function App() {
                     {lists &&
                         lists.map(list => (
                             <Tasks key={list.id} list={list} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask}
-                                withoutEmpty onRemoveTask={onRemoveTask} onEditTask={onEditTask} onCompleteTask={onCompleteTask}
+                                withoutEmpty onRemoveTask={onRemoveTask} onEditTask={onEditTask}
+                                onCompleteTask={onCompleteTask} onRemove={onRemove}
                             />
                         ))
                     }
@@ -166,6 +171,7 @@ function App() {
                     {lists && activeItem &&
                         <Tasks list={activeItem} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask}
                             onRemoveTask={onRemoveTask} onEditTask={onEditTask} onCompleteTask={onCompleteTask}
+                            onRemove={onRemove}
                         />}
                 </Route>
             </div>
