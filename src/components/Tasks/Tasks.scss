@@ -1,5 +1,4 @@
 .tasks {
-
     &:not(:last-of-type) {
         margin-bottom: 30px;
     }
@@ -83,9 +82,40 @@
         }
 
         &-row {
+
             display: flex;
             align-items: center;
             margin-bottom: 15px;
+
+                &:hover &-actions{
+                    opacity: 1;
+                }
+
+            &-actions {
+                display: flex;
+                opacity: 0;
+                transition: opacity 0.15s ease-in-out;
+
+                div {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 32px;
+                    height: 32px;
+                    background-color: lighten($color: #f4f6f8, $amount: 2%);
+                    border-radius: 6px;
+                    margin-left: 5px;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: darken($color: #f4f6f8, $amount: 2%);
+
+                        img {
+                            opacity: 0.8;
+                        }
+                    }
+                }
+            }
 
             input {
                 margin-left: 15px;

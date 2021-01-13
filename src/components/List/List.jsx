@@ -12,7 +12,6 @@ export const List = ({ items, isRemovable, onClick, onRemove, onClickItem, activ
   const removeList = (i) => {
     if (window.confirm("удалить?")) {
       axios.delete('http://localhost:3001/lists/' + i.id).then(() => {
-        console.log(i.id)
         onRemove(i.id)
       })
 

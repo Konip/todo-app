@@ -12,8 +12,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 760px;
-  height: 530px;
+  width: calc(100vw - 500px);
+  height: calc(100vh - 100px);
   transform: translate(-50%, -50%);
   box-shadow: 1px 2px 20px #eceaea;
   border-radius: 10px;
@@ -58,7 +58,6 @@
   cursor: pointer;
   font-size: 14px;
 
-  
   &:hover {
     background-color: darken(#4dd599, 5%);
   }
