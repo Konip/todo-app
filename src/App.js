@@ -7,7 +7,6 @@ import axios from 'axios'
 import { Route, useHistory } from 'react-router-dom';
 
 
-
 function App() {
 
     const [lists, setLists] = useState(null)
@@ -66,10 +65,10 @@ function App() {
     const onEditTask = (listId, taskObj) => {
         const newTaskText = window.prompt('Текст задачи', taskObj.text)
 
-        if(!newTaskText){
+        if (!newTaskText) {
             return
         }
-        
+
         const newList = lists.map(i => {
             if (i.id === listId) {
                 i.tasks = i.tasks.map(task => {
@@ -86,14 +85,31 @@ function App() {
             .catch(() => {
                 alert('Не удалось изменить задачу')
             })
-
     }
+    const onCompleteTask = (listId, taskId, completed) => {
+        const newList = lists.map(i => {
+            if (i.id === listId) {
+                i.tasks = i.tasks.map(task => {
+                    if (task.id === taskId) {
+                        task.completed = completed
+                    }
+                    return task
+                })
+            }
+            return i
+        })
+        setLists(newList)
+        axios.patch('http://localhost:3001/tasks/' + taskId, { completed: completed })
+            .catch(() => {
+                alert('Не удалось изменить задачу')
+            })
+    }
+
 
     return (
         <div className="todo" >
+            {/* шапка sidebar */}
             <div className="todo__sidebar">
-
-                {/* шапка sidebar */}
                 <List
                     onClickItem={item => {
                         history.push(`/`)
@@ -101,7 +117,7 @@ function App() {
 
                     items={[
                         {
-                            active: true,
+                            active: history.location.pathname === '/',
                             icon: (
                                 <svg width="18"
                                     height="18"
@@ -118,7 +134,7 @@ function App() {
 
                 {/* список задач */}
                 {lists ?
-                    <List items={lists} isRemovable={true}
+                    <List items={lists} isRemovable
                         onClickItem={item => {
                             history.push(`/lists/${item.id}`)
                             setactiveItem(item)
@@ -141,7 +157,7 @@ function App() {
                     {lists &&
                         lists.map(list => (
                             <Tasks key={list.id} list={list} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask}
-                                withoutEmpty
+                                withoutEmpty onRemoveTask={onRemoveTask} onEditTask={onEditTask} onCompleteTask={onCompleteTask}
                             />
                         ))
                     }
@@ -149,8 +165,8 @@ function App() {
 
                 <Route path='/lists/:id'>
                     {lists && activeItem &&
-                        <Tasks activeItem={activeItem} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask}
-                            onRemoveTask={onRemoveTask} onEditTask={onEditTask}
+                        <Tasks list={activeItem} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask}
+                            onRemoveTask={onRemoveTask} onEditTask={onEditTask} onCompleteTask={onCompleteTask}
                         />}
                 </Route>
             </div>

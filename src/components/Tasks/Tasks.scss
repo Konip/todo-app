@@ -3,6 +3,9 @@
         margin-bottom: 30px;
     }
 
+    a {
+        text-decoration: none;
+    }
     &__title {
         font-family: Montserrat;
         font-style: normal;
@@ -82,14 +85,13 @@
         }
 
         &-row {
-
             display: flex;
             align-items: center;
             margin-bottom: 15px;
 
-                &:hover &-actions{
-                    opacity: 1;
-                }
+            &:hover &-actions {
+                opacity: 1;
+            }
 
             &-actions {
                 display: flex;

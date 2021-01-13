@@ -4,44 +4,46 @@ import editSvg from '../../assets/img/edit.svg'
 import axios from 'axios'
 import { AddTasksForm } from './AddTasksForm'
 import { Task } from './Task'
+import { Link } from 'react-router-dom';
 
 
-export const Tasks = ({ activeItem, onEditTitle, oneAddTask, withoutEmpty, onRemoveTask, onEditTask }) => {
+export const Tasks = ({ list, onEditTitle, oneAddTask, withoutEmpty, onRemoveTask, onEditTask, onCompleteTask }) => {
 
     const editTitle = () => {
-        const netTitle = window.prompt('Название списка', activeItem.name)
+        const netTitle = window.prompt('Название списка', list.name)
         if (netTitle) {
-            onEditTitle(activeItem.id, netTitle)
-            axios.patch('http://localhost:3001/lists/' + activeItem.id, {
+            onEditTitle(list.id, netTitle)
+            axios.patch('http://localhost:3001/lists/' + list.id, {
                 name: netTitle
             }).catch(() => {
                 alert('Не удалось обновить название списка')
             })
         }
     }
-    const onEdit = () => {
-
-    }
 
     return (
         <div className="tasks">
 
-            <h2 style={{ color: activeItem.color.hex }} onClick={editTitle} className="tasks__title">
-                {activeItem.name}
-                <img src={editSvg} alt="edit" />
-            </h2>
+            <Link to={`/lists/${list.id}`}>
+                <h2 style={{ color: list.color.hex }} className="tasks__title">
+                    {list.name}
+                    <img src={editSvg} alt="edit" onClick={editTitle} />
+                </h2>
+            </Link>
+
 
             <div className="tasks__items">
-                {!withoutEmpty && !activeItem.tasks.length && <h2>Задачи отсутствуют</h2>}
-                {
-                    activeItem.tasks.map(task =>
+                {!withoutEmpty && list.tasks && !list.tasks.length && <h2>Задачи отсутствуют</h2>}
+
+                {list.tasks &&
+                    list.tasks.map(task =>
                     (
-                        <Task key={task.id} activeItem={activeItem} {...task}
+                        <Task key={task.id} list={list} {...task} onCompleteTask={onCompleteTask}
                             onRemoveTask={onRemoveTask} onEditTask={onEditTask}
                         />
                     ))
                 }
-                <AddTasksForm list={activeItem} oneAddTask={oneAddTask} />
+                <AddTasksForm key={list.id} list={list} oneAddTask={oneAddTask} />
             </div>
         </div>
     )
