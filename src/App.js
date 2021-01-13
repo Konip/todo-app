@@ -105,14 +105,13 @@ function App() {
             })
     }
 
-
     return (
         <div className="todo" >
             {/* шапка sidebar */}
             <div className="todo__sidebar">
                 <List
                     onClickItem={item => {
-                        history.push(`/`)
+                        history.push('/')
                     }}
 
                     items={[
@@ -134,11 +133,11 @@ function App() {
 
                 {/* список задач */}
                 {lists ?
-                    <List items={lists} isRemovable
-                        onClickItem={item => {
-                            history.push(`/lists/${item.id}`)
-                            setactiveItem(item)
-                        }}
+                    <List items={lists} isRemovable onClickItem={i => {
+                        history.push(`/lists/${i.id}`)
+                        setactiveItem(i)
+                       
+                    }}
 
                         activeItem={activeItem}
                         onRemove={id => {
@@ -163,7 +162,7 @@ function App() {
                     }
                 </Route>
 
-                <Route path='/lists/:id'>
+                <Route path="/lists/:id">
                     {lists && activeItem &&
                         <Tasks list={activeItem} onEditTitle={oneEditListTitle} oneAddTask={oneAddTask}
                             onRemoveTask={onRemoveTask} onEditTask={onEditTask} onCompleteTask={onCompleteTask}

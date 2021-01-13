@@ -32,7 +32,7 @@ export const List = ({ items, isRemovable, onClick, onRemove, onClickItem, activ
             onClick={onClickItem ? () => onClickItem(i) : null}
           >
             <i>{i.icon ? i.icon : <Badge color={i.color.name} />}</i>
-            <span>{i.name}{i.tasks && ` (${i.tasks.length})`}</span>
+            <span>{i.name}{i.tasks && `(${i.tasks.length})`}</span>
 
             { isRemovable &&
               <img className='list__remove-icon' src={removeSvg} alt="remove" onClick={() => removeList(i)} />}

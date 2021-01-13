@@ -73,10 +73,9 @@
 
         h2 {
             position: absolute;
-            width: 347px;
-            height: 39px;
-            left: 366px;
-            top: 234px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-20%, -50%);
             font-family: Montserrat;
             font-style: normal;
             font-weight: bold;
