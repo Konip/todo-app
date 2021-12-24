@@ -45,6 +45,11 @@ export function AddTasksForm({list}) {
                 setIsLoading(false)
             })
     }
+<<<<<<< HEAD:client/src/components/Tasks/AddTasksForm.jsx
+=======
+
+    return (
+>>>>>>> 62243484865a91379f1855a8b02372a5d48473ff:src/components/Tasks/AddTasksForm.jsx
 
     return (
         <div className="tasks__form">
