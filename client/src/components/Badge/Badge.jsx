@@ -2,7 +2,6 @@ import cn from 'classnames';
 import React from 'react';
 import './Badge.scss';
 
-
 export const Badge = ({ hex, onClick, className }) => {
     return (
         <i onClick={onClick}

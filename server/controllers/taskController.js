@@ -8,14 +8,15 @@ class TaskController {
     }
 
     async getAll(req, res) {
-        const tasks = await Task.findAll()
+        const tasks = await Task.findAll({order: [['createdAt', 'ASC']]})
         return res.json(tasks)
     }
 
     async getOne(req, res) {
         const {id} = req.params
         const tasks = await Task.findAll({
-            where: {listId: id}
+            where: {listId: id},
+            order: [['createdAt', 'ASC']]
         })
         return res.json(tasks)
     }

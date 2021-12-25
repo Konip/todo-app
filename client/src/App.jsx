@@ -1,33 +1,44 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {Route, useHistory} from 'react-router-dom';
+import React, {useEffect, useContext} from 'react';
+import {Route, useHistory, Switch} from 'react-router-dom';
 import "./App.css";
 import {AddList} from "./components/AddList/AddButtonList";
 import {List} from "./components/List/List";
 import {Tasks} from './components/Tasks/Tasks';
-import {getLists} from './http/listAPI'
-import {getOneTask, getAllTasks, deleteTask, renameTask, completedTask} from './http/taskAPI'
+import {getLists, renameLists} from './http/listAPI'
+import {deleteTask, renameTask, completedTask} from './http/taskAPI'
 import {Context} from "./index";
 import {observer} from "mobx-react-lite";
 
+
 const App = observer(() => {
 
-        const [activeItem, setActiveItem] = useState(null)
         let history = useHistory();
-
-        const {lists, tasks} = useContext(Context)
+        const {lists} = useContext(Context)
+        const [all, setAll] = React.useState(false)
 
         useEffect(() => {
             getLists().then(data => lists.setLists(data))
-
         }, [])
+
+        const setActiveList = (id) => {
+            if (id) {
+                lists.setActiveItem(id)
+                history.push(`/lists/${id}`)
+            } else {
+                lists.setActiveItem([])
+                history.push(`/`)
+                setAll(true)
+            }
+        }
 
         const onRemoveTask = (taskId) => {
             if (window.confirm('Вы действительно хотите удалить задачу?')) {
 
                 deleteTask(taskId)
                     .then(() => {
-                        getOneTask(activeItem.id).then(data => {
-                            tasks.setTasks(data)
+                        getLists().then(data => {
+                            lists.setLists(data)
+                            lists.setActiveItem(lists.activeList.id)
                         })
                     })
             }
@@ -35,14 +46,13 @@ const App = observer(() => {
 
         const onEditTask = (taskId, text) => {
             const newTaskText = window.prompt('Текст задачи', text)
-            if (!newTaskText) {
-                return
-            }
+            if (!newTaskText) return
 
             renameTask(taskId, newTaskText)
                 .then(() => {
-                    getOneTask(activeItem.id).then(data => {
-                        tasks.setTasks(data)
+                    getLists().then(data => {
+                        lists.setLists(data)
+                        lists.setActiveItem(lists.activeList?.id)
                     })
                 })
                 .catch(() => {
@@ -53,8 +63,11 @@ const App = observer(() => {
         const onCompleteTask = (taskId, status) => {
             completedTask(taskId, status)
                 .then(() => {
-                    getOneTask(activeItem.id).then(data => {
-                        tasks.setTasks(data)
+                    getLists().then(data => {
+                        lists.setLists(data)
+                        if (lists.activeList.id) {
+                            lists.setActiveItem(lists.activeList.id)
+                        }
                     })
                 })
                 .catch(() => {
@@ -62,21 +75,31 @@ const App = observer(() => {
                 })
         }
 
-        const fetchTasks = ({id, color, name}) => {
-            getOneTask(id).then(data => {
-                tasks.setTasks(data)
-                setActiveItem({id, color, name})
-                history.push(`/lists/${id}`)
-            })
+
+        const editTitle = (name, id) => {
+            const newTitle = window.prompt('Название списка', name)
+            if (newTitle) {
+                renameLists(id, newTitle)
+                    .then(() => {
+                        getLists().then(data => {
+                            lists.setLists(data)
+                            if (lists.activeList) {
+                                lists.setActiveItem(lists.activeList.id)
+                                history.push(`/lists/${lists.activeList.id}`)
+                            }
+                        })
+                    })
+                    .catch(() => {
+                        alert('Не удалось обновить название списка')
+                    })
+            }
         }
 
         return (
             <div className="todo">
                 <div className="todo__sidebar">
                     <List
-                        onClickItem={item => {
-                            history.push('/')
-                        }}
+                        setActiveList={setActiveList}
                         items={[
                             {
                                 active: history.location.pathname === '/',
@@ -96,37 +119,40 @@ const App = observer(() => {
                         ]}
                     />
 
-                    {/* список задач */}
                     {lists.lists ?
-                        <List items={lists.lists} isRemovable activeItem={activeItem}
-                              onClickItem={i => fetchTasks(i)}
+                        <List items={lists.lists} isRemovable activeItem={lists.activeList}
+                              setActiveList={setActiveList}
                         /> : 'Загрузк...'
                     }
 
-                    {/* добавить задачу */}
                     <AddList/>
                 </div>
 
                 <div className="todo__tasks">
-                    <Route exact path='/'>
-                        {tasks.tasks &&
-                        tasks.tasks.map(list => (
-                            <Tasks key={list.id} tasks={tasks.tasks}
-                                   withoutEmpty onRemoveTask={onRemoveTask} onEditTask={onEditTask}
-                                   onCompleteTask={onCompleteTask}
-                            />
-                        ))
-                        }
-                    </Route>
+                    <Switch>
+                        <Route exact path='/'>
+                            {
+                                lists.lists.map(list => (
+                                    <Tasks key={list.id} list={list}
+                                           withoutEmpty onRemoveTask={onRemoveTask} onEditTask={onEditTask}
+                                           onCompleteTask={onCompleteTask} all={all} editTitle={editTitle}
+                                    />
+                                ))
+                            }
+                        </Route>
 
-                    <Route path="/lists/:id">
-                        {tasks.tasks && activeItem &&
-                        <Tasks list={activeItem} tasks={tasks.tasks}
-                               onRemoveTask={onRemoveTask} onEditTask={onEditTask} onCompleteTask={onCompleteTask}
-                        />}
-                    </Route>
+                        <Route path="/lists/:id">
+                            {lists.activeList &&
+                            <Tasks list={lists.activeList} editTitle={editTitle}
+                                   onRemoveTask={onRemoveTask} onEditTask={onEditTask} onCompleteTask={onCompleteTask}
+                            />}
+                        </Route>
+
+                        <Route path="*">
+                            {() => history.push('/')}
+                        </Route>
+                    </Switch>
                 </div>
-
             </div>
         )
     }

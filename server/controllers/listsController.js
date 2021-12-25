@@ -1,4 +1,5 @@
 const {List} = require('../models/models')
+const {Task} = require('../models/models')
 
 class ListsController {
     async create(req, res) {
@@ -9,7 +10,11 @@ class ListsController {
 
     async get(req, res) {
         const lists = await List.findAll({order: [['createdAt', 'ASC']]})
-        return res.json(lists)
+        const tasks = await Task.findAll({order: [['createdAt', 'ASC']]})
+        const result = lists.map(({id, name, color}) => {
+            return {id, name, color, tasks: tasks.filter(el => el.listId === id)}
+        })
+        return res.json(result)
     }
 
     async rename(req, res) {
@@ -24,6 +29,7 @@ class ListsController {
 
     async delete(req, res) {
         const {id} = req.params
+        await Task.destroy({where: {listId: id}})
         await List.destroy({where: {id}})
         return res.status(200).json({message: 'Deleted successfully'})
     }

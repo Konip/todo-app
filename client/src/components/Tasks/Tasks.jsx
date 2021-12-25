@@ -3,45 +3,29 @@ import "./Tasks.scss"
 import editSvg from '../../assets/img/edit.svg'
 import {AddTasksForm} from './AddTasksForm'
 import {Task} from './Task'
-import {Link, useHistory} from 'react-router-dom';
-import {Context} from "../../index";
-import {renameLists, getLists} from '../../http/listAPI'
+import {Link} from 'react-router-dom';
 import {observer} from "mobx-react-lite";
 
-export const Tasks = observer(({list, tasks, withoutEmpty, onRemoveTask, onEditTask, onCompleteTask}) => {
-
-    const {lists} = useContext(Context)
-    const history = useHistory();
-
-    const editTitle = () => {
-        const newTitle = window.prompt('Название списка', list.name)
-        if (newTitle) {
-            renameLists(list.id, newTitle)
-                .then(() => {
-                    getLists().then(data => lists.setLists(data))
-                    history.push(`/lists/${list.id}`)
-                })
-                .catch(() => {
-                    alert('Не удалось обновить название списка')
-                })
-        }
-    }
+export const Tasks = observer(({list, withoutEmpty, onRemoveTask, onEditTask, onCompleteTask, editTitle, all}) => {
 
     return (
         <div className="tasks">
-
-            <Link to={`/lists/${list.id}`}>
-                <h2 style={{color: list.color}} className="tasks__title">
-                    {list.name}
-                    <img src={editSvg} alt="edit" onClick={editTitle}/>
-                </h2>
-            </Link>
+            {list.id &&
+            <>
+                <Link to={!all ? `/lists/${list.id}` : ''}>
+                    <h2 style={{color: list.color}} className="tasks__title">
+                        {list.name}
+                        <img src={editSvg} alt="edit" onClick={() => editTitle(list.name, list.id)}/>
+                    </h2>
+                </Link>
+            </>
+            }
 
             <div className="tasks__items">
-                {!withoutEmpty && tasks && !tasks.length && <h2>Задачи отсутствуют</h2>}
+                {!withoutEmpty && !list.tasks && <h2>Задачи отсутствуют</h2>}
 
-                {tasks &&
-                tasks.map(task =>
+                {list.tasks &&
+                list.tasks.map(task =>
                     (
                         <Task key={task.id} {...task} onCompleteTask={onCompleteTask}
                               onRemoveTask={onRemoveTask} onEditTask={onEditTask}

@@ -3,6 +3,7 @@ import "./Tasks.scss"
 import addSvg from '../../assets/img/add.svg'
 import {Context} from "../../index";
 import {createTask, getOneTask} from '../../http/taskAPI'
+import {getLists} from '../../http/listAPI'
 
 export function AddTasksForm({list}) {
 
@@ -10,7 +11,7 @@ export function AddTasksForm({list}) {
     const [inputValue, setInputValue] = useState('')
     const [isLoading, setIsLoading] = useState(false)
 
-    const {tasks} = useContext(Context)
+    const {lists} = useContext(Context)
 
     const toogleFormVisible = () => {
         setFormVisible(!visibleForm)
@@ -30,11 +31,11 @@ export function AddTasksForm({list}) {
         }
 
         setIsLoading(true)
-
         createTask(obj)
             .then(() => {
-                getOneTask(list.id).then((data) => {
-                    tasks.setTasks(data)
+                getLists().then((data) => {
+                    lists.setLists(data)
+                    lists.setActiveItem(list.id)
                     toogleFormVisible()
                 })
             })
@@ -45,11 +46,6 @@ export function AddTasksForm({list}) {
                 setIsLoading(false)
             })
     }
-<<<<<<< HEAD:client/src/components/Tasks/AddTasksForm.jsx
-=======
-
-    return (
->>>>>>> 62243484865a91379f1855a8b02372a5d48473ff:src/components/Tasks/AddTasksForm.jsx
 
     return (
         <div className="tasks__form">
